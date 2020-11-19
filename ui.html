@@ -93,7 +93,7 @@ form.onsubmit = (event) => {
   parent.postMessage({ pluginMessage: { 
     type: 'input',
     data: {
-      limitToFrame: form.elements['limitToFrame'].value,
+      limitToFrame: form.elements['limitToFrame'].checked,
       componentKey: form.elements['componentName'].value,
       outputFormat: form.elements['outputFormat'].value
     }
