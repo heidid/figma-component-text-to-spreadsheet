@@ -1,0 +1,14 @@
+{
+  "name": "Component-Text-to-Spreadsheet",
+  "version": "1.0.0",
+  "description": "Extract text from instances of a component",
+  "main": "code.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "author": "Heidi Dong",
+  "license": "",
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.18.2"
+  },
+}

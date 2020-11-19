@@ -1,0 +1,107 @@
+<meta charset="utf-8" /> 
+
+<style type="text/css">
+@font-face {
+  font-family: 'Inter';
+  font-weight: 400;
+  font-style: normal;
+  src: url('https://rsms.me/inter/font-files/Inter-Regular.woff2?v=3.7') format('woff2'),
+  url('https://rsms.me/inter/font-files/Inter-Regular.woff?v=3.7') format('woff');
+}
+body {
+  color: #333;
+  font-family: 'Inter', sans-serif;
+}
+fieldset, textarea {
+  margin-bottom: 15px;
+}
+input, button, select {
+  font-family: 'Inter', sans-serif;
+}
+#output-wrapper label {
+  display: block;
+}
+#output {
+  border: 1px solid #444;
+  width: 100%;
+  height: 300px;
+  overflow: auto;
+  font-family: "SFMono-Regular",Consolas,Menlo,Courier,"Courier New",monospace;
+}
+</style>
+
+
+<form id="inputForm">
+  <fieldset>
+    <legend>Component Instances</legend>
+    <div>
+      <label for="componentName">Component:</label>
+      <select name="componentName" id="componentName">
+      </select>
+    </div>
+    <div>
+      <input type="checkbox" id="limitToFrame" />
+      <label for="limitToFrame">Limit to instances in the selected frame</label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Output Format:</legend>
+    <div>
+      <input type="radio" name="outputFormat" id="outputFormatCSV" value="csv" checked />
+      <label for="outputFormatCSV">CSV</label>
+    </div>
+    <div>
+      <input type="radio" name="outputFormat" id="outputFormatJSON" value="json" />
+      <label for="outputFormatJSON">JSON</label>
+    </div>
+  </fieldset>
+  <div>
+    <button type="submit">Grab Text</button>
+  </div>  
+</form>
+
+<div id="output-wrapper">
+  <label for="output">Result</label>
+  <textarea id="output"></textarea>
+  <button id="copyBtn">Copy to Clipboard</button>
+</div>
+
+
+<script>
+const form = document.forms['inputForm'];
+const outputBox = document.getElementById('output');
+
+onmessage = (event) => {
+  const msg = event.data.pluginMessage;
+  if (msg.type === 'componentList') {
+    const optionElements = msg.data.map(createOptionElement);
+    form.elements['componentName'].append(...optionElements);
+  }
+  if (msg.type === 'output') {
+    outputBox.innerHTML = msg.data;
+  }
+}
+
+createOptionElement = (componentData) => {
+  const el = document.createElement('option');
+  el.value = componentData.key;
+  el.text = componentData.name;
+  return el;
+}
+
+form.onsubmit = (event) => {
+  parent.postMessage({ pluginMessage: { 
+    type: 'input',
+    data: {
+      limitToFrame: form.elements['limitToFrame'].value,
+      componentKey: form.elements['componentName'].value,
+      outputFormat: form.elements['outputFormat'].value
+    }
+  }}, '*');
+}
+
+document.getElementById('copyBtn').onclick = () => {
+  outputBox.select();
+  document.execCommand("copy");
+}
+</script>

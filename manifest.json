@@ -1,0 +1,7 @@
+{
+  "name": "Component Text to Spreadsheet",
+  "id": "911066621691845116",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html"
+}
